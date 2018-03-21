@@ -27,9 +27,7 @@
     "sequelize": "4.8.0",
     "serve-favicon": "~2.3.0",
     "stripe": "5.5.0",
-    "uuid": "3.2.1"
-  },
-  "devDependencies": {
+    "uuid": "3.2.1",
     "faker": "4.1.0",
     "moment": "2.21.0"
   }
