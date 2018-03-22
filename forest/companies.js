@@ -37,5 +37,10 @@ Liana.collection('companies', {
 			type: 'File',
 			isRequired: true
 		}]
-	}],
+	}, {
+    name: 'Whoami',
+    type: 'global',
+    endpoint: '/forest/whoami',
+    httpMethod: 'GET'
+  }],
 });

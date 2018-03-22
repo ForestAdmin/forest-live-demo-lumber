@@ -28,8 +28,11 @@ app.use(jwt({
   credentialsRequired: false
 }));
 
-
-app.use('/forest', require('./decorators/routes/products.js'));
+fs.readdirSync('./decorators/routes').forEach((file) => {
+  if (file[0] !== '.') {
+    app.use('/forest', require(`./decorators/routes/${file}`));
+  }
+});
 
 fs.readdirSync('./routes').forEach((file) => {
   if (file[0] !== '.') {
