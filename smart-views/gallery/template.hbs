@@ -1,0 +1,36 @@
+<style>
+  .c-gallery.l-table--content {
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 50px;
+    overflow-y: auto;
+  }
+
+  .c-gallery__image img {
+    height: 182px;
+    width: 182px;
+    margin: 3px;
+    border: 1px solid #bbb;
+    border-radius: 3px;
+		transition: all .3s ease-out;
+  }
+
+  .c-gallery__image:hover {
+    transform: scale(1.05);
+  }
+</style>
+
+<section class="l-view__element l-view__element--table u-f-g c-gallery l-table l-table--content">
+  <div>
+    {{#each records as |record|}}
+      {{#link-to 'rendering.data.collection.list.viewEdit.details' collection.id record.id class="c-gallery__image"}}
+        <img class="c-gallery__image" src={{record.forest-picture}}>
+      {{/link-to}}
+    {{/each}}
+  </div>
+</section>
+
+{{table/table-footer records=records currentPage=currentPage
+  fetchPage="fetchPage" currentUser=currentUser customView=customView
+  updateRecordPerPage="updateRecordPerPage" collection=collection
+  numberOfPages=numberOfPages fetchRecords="fetchRecords"}}
