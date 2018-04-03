@@ -13,7 +13,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     'stripe_id': {
       type: DataTypes.STRING,
-    }
+    },
+    'avatar': {
+      type: DataTypes.STRING,
+    },
+    'phone': {
+      type: DataTypes.STRING,
+    },
+    'birth_date': {
+      type: DataTypes.DATEONLY,
+    },
   }, {
     tableName: 'customers',
     underscored: true,
