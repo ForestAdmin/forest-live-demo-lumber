@@ -59,5 +59,12 @@ Liana.collection('customers', {
             address.address_city + address.country;
         });
     }
+  }, {
+    field: 'age',
+    type: 'Number',
+    get: (customer) => {
+      let diff = new Date() - new Date(customer.birth_date);
+      return Math.floor(diff / 31557600000); // Divide by 1000*60*60*24*365.25
+    }
   }]
 });
