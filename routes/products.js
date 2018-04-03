@@ -32,9 +32,9 @@ router.post('/products/actions/import-data', Liana.ensureAuthenticated,
 						}
 
 						return models.products.create({
-							label: row[0].replace('//i5.walmartimages.com/asr/', '//s3-eu-west-1.amazonaws.com/forestadmin-test/livedemo/'),
+							label: row[0],
 							price: price,
-							picture: row[1]
+							picture: row[1].replace('//i5.walmartimages.com/asr/', '//s3-eu-west-1.amazonaws.com/forestadmin-test/livedemo/')
 						});
 					})
 					.then(() => {
