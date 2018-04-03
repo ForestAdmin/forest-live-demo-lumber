@@ -1,6 +1,6 @@
 postgres :
   image : postgres:latest
-  container_name : forest_demo
+  container_name : forest_live_demo_lumber
   ports :
     - "5416:5432"
   environment:
