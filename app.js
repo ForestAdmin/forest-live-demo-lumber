@@ -46,10 +46,11 @@ app.use(require('forest-express-sequelize').init({
   authSecret: process.env.FOREST_AUTH_SECRET,
   sequelize: require('./models').sequelize,
   integrations: {
-    stripe: {
-      apiKey: process.env.STRIPE_SECRET_KEY,
-      mapping: 'customers.stripe_id',
-      stripe: require('stripe')
+    mixpanel: {
+      apiKey: process.env.MIXPANEL_API_KEY,
+      apiSecret: process.env.MIXPANEL_API_SECRET,
+      mapping: 'customers.id',
+      mixpanel: require('mixpanel-data-export')
     }
   }
 }));

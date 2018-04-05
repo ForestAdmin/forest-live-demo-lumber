@@ -2,8 +2,8 @@ postgres :
   image : postgres:latest
   container_name : forest_live_demo_lumber
   ports :
-    - "5416:5432"
+    - "5446:5432"
   environment:
-    - POSTGRES_DB=forest_demo
+    - POSTGRES_DB=forest_live_demo_rails
     - POSTGRES_USER=forest
     - POSTGRES_PASSWORD=secret
