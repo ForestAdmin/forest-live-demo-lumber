@@ -49,7 +49,8 @@ app.use(require('forest-express-sequelize').init({
     mixpanel: {
       apiKey: process.env.MIXPANEL_API_KEY,
       apiSecret: process.env.MIXPANEL_API_SECRET,
-      mapping: 'customers.id',
+      mapping: 'customers.email',
+      customProperties: ['Campaign Source', 'plan', 'tutorial complete'],
       mixpanel: require('mixpanel-data-export')
     }
   }
