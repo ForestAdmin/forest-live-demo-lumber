@@ -11,6 +11,7 @@ Liana.collection('orders', {
         .findAll({
           include: [{
             model: models.customers,
+            where: { id: order.customer_id}
             include: [{
               model: models.orders,
               where: { ref: order.ref }
