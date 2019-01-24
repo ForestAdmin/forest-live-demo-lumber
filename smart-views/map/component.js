@@ -3,7 +3,6 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   tagName: '',
-  router: Ember.inject.service('-routing'),
   map: null,
   loaded: false,
   loadPlugin: function() {
@@ -58,7 +57,7 @@ export default Ember.Component.extend({
       marker.on('click', function () {
         that.get('router')
           .transitionTo('rendering.data.collection.list.viewEdit.details',
-            [that.get('collection.id'), recordId]);
+            that.get('collection.id'), recordId);
       });
 
       setInterval(function () {

@@ -2,7 +2,6 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  router: Ember.inject.service('-routing'),
   store: Ember.inject.service('store'),
   loaded: false,
   loadPlugin: function() {
@@ -17,7 +16,7 @@ export default Ember.Component.extend({
           eventClick: function (event, jsEvent, view) {
             that.get('router')
               .transitionTo('rendering.data.collection.list.viewEdit.details',
-                [that.get('collection.id'), event.id]);
+                that.get('collection.id'), event.id);
           },
           viewRender: function(view, element) {
             let params = {
