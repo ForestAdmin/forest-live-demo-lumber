@@ -1,72 +1,107 @@
-'use strict';
-import Ember from 'ember';
+import Component from '@ember/component';
+import { inject as service } from '@ember/service';
+import { scheduleOnce } from '@ember/runloop';
+import { observer } from '@ember/object';
+import $ from 'jquery';
+import SmartViewMixin from 'client/mixins/smart-view-mixin';
 
-export default Ember.Component.extend({
-  store: Ember.inject.service('store'),
+export default Component.extend(SmartViewMixin, {
+  store: service(),
+
+  conditionAfter: null,
+  conditionBefore: null,
   loaded: false,
-  loadPlugin: function() {
-    var that = this;
-    Ember.run.scheduleOnce('afterRender', this, function () {
-      Ember.$.getScript('//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js', function () {
-        that.set('loaded', true);
+  calendarId: null,
 
-        $('#calendar').fullCalendar({
+  init(...args) {
+    this._super(...args);
+
+    this.loadPlugin();
+  },
+
+  onRecordsChange: observer('records.[]', function () {
+    this.setEvent();
+  }),
+
+  loadPlugin() {
+    scheduleOnce('afterRender', this, function () {
+      this.set('calendarId', `${this.elementId}-calendar`);
+
+      $.getScript('//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js', () => {
+        this.set('loaded', true);
+        this.setEvent();
+
+        $(`#${this.calendarId}`).fullCalendar({
           allDaySlot: false,
           minTime: '00:00:00',
-          eventClick: function (event, jsEvent, view) {
-            that.get('router')
-              .transitionTo('rendering.data.collection.list.viewEdit.details',
-                that.get('collection.id'), event.id);
+          defaultDate: new Date(2018, 2, 1),
+          eventClick: (event, jsEvent, view) => {
+            this.router.transitionTo(
+              'rendering.data.collection.list.viewEdit.details',
+              this.get('collection.id'),
+              event.id,
+            );
           },
-          viewRender: function(view, element) {
-            let params = {
-              filter: {
-                'start_date': '>' + view.start.toISOString() +
-                                ',<' + view.end.toISOString()
-              },
-              filterType: 'and',
-              timezone: 'America/Los_Angeles',
-              'page[number]': 1,
-              'page[size]': 50
-            };
+          viewRender: (view) => {
+            const field = this.get('collection.fields').findBy('field', 'start_date');
 
-            that.get('store')
-              .query('forest_appointment', params)
-              .then((appointments) => {
-                that.set('appointments', appointments);
-              });
+            if (this.conditionAfter) {
+              this.removeCondition(this.conditionAfter, true);
+              this.conditionAfter.destroyRecord();
+            }
+            if (this.conditionBefore) {
+              this.removeCondition(this.conditionBefore, true);
+              this.conditionBefore.destroyRecord();
+            }
+
+            const conditionAfter = this.store.createRecord('condition');
+            conditionAfter.set('field', field);
+            conditionAfter.set('operator', 'is after');
+            conditionAfter.set('value', view.start);
+            conditionAfter.set('smartView', this.viewList);
+            this.set('conditionAfter', conditionAfter);
+
+            const conditionBefore = this.store.createRecord('condition');
+            conditionBefore.set('field', field);
+            conditionBefore.set('operator', 'is before');
+            conditionBefore.set('value', view.end);
+            conditionBefore.set('smartView', this.viewList);
+            this.set('conditionBefore', conditionBefore);
+
+            this.addCondition(conditionAfter, true);
+            this.addCondition(conditionBefore, true);
+
+            this.fetchRecords({ page: 1 });
           }
         });
       });
 
-      var cssLink = $('<link>');
-      $('head').append(cssLink);
+      const headElement = document.getElementsByTagName('head')[0];
 
-      cssLink.attr({
-        rel:  'stylesheet',
-        type: 'text/css',
-        href: '//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css'
-      });
+      const cssLink = document.createElement('link');
+      cssLink.type = 'text/css';
+      cssLink.rel = 'stylesheet';
+      cssLink.href = '//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css';
+
+      headElement.appendChild(cssLink);
     });
-  }.on('init'),
-  setEvent: function () {
-    if (!this.get('appointments')) { return; }
+  },
 
-    var events = [];
-    $('#calendar').fullCalendar('removeEvents');
+  setEvent() {
+    if (!this.records) { return; }
 
-    this.get('appointments').forEach(function (appointment) {
-			var event = {
-				id: appointment.get('id'),
-				title: appointment.get('forest-name'),
-				start: appointment.get('forest-start_date'),
- 				end: appointment.get('forest-end_date')
+    const calendar = $(`#${this.calendarId}`);
+    calendar.fullCalendar('removeEvents');
 
-			};
+    this.records.forEach((appointment) => {
+      const event = {
+          id: appointment.get('id'),
+          title: appointment.get('forest-name'),
+          start: appointment.get('forest-start_date'),
+          end: appointment.get('forest-end_date')
+      };
 
-			$('#calendar').fullCalendar('renderEvent', event, true);
-		});
-  }.observes('loaded', 'appointments.[]')
+      calendar.fullCalendar('renderEvent', event, true);
+    });
+  },
 });
-
-

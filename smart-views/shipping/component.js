@@ -1,14 +1,22 @@
-'use strict';
-import Ember from 'ember';
+import Component from '@ember/component';
+import { observer, computed } from '@ember/object';
 import SmartViewMixin from 'client/mixins/smart-view-mixin';
 
-export default Ember.Component.extend(SmartViewMixin.default, {
-  setDefaultCurrentRecord: function () {
-    if (!this.get('currentRecord')) {
-      this.set('currentRecord', this.get('records.firstObject'));
+export default Component.extend(SmartViewMixin, {
+  didInsertElement() {
+    this.setDefaultCurrentRecord();
+  },
+
+  onRecordsChange: observer('records.[]', function () {
+    this.setDefaultCurrentRecord();
+  }),
+
+  setDefaultCurrentRecord() {
+    if (!this.currentRecord) {
+      this.set('currentRecord', this.records.firstObject);
     }
-  }.on('didInsertElement').observes('records.[]'),
-  status: function () {
+  },
+  status: computed('currentRecord.forest-shipping_status', function () {
     switch(this.get('currentRecord.forest-shipping_status')) {
       case 'Being processed':
         return 'one';
@@ -18,11 +26,13 @@ export default Ember.Component.extend(SmartViewMixin.default, {
         return 'three';
       case 'Shipped':
         return 'four';
+      default:
+        return null;
     }
-  }.property('currentRecord.forest-shipping_status'),
+  }),
   actions: {
-    selectRecord: function (record) {
+    selectRecord(record) {
       this.set('currentRecord', record);
-    }
-  }
+    },
+  },
 });
