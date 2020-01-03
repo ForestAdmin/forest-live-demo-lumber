@@ -15,7 +15,7 @@
     "debug": "~2.2.0",
     "dotenv": "~2.0.0",
     "express": "~4.13.4",
-    "express-cors": "git://github.com/ForestAdmin/express-cors",
+    "cors": "2.8.5",
     "filesize": "3.6.0",
     "forest-express-sequelize": "latest",
     "jsonapi-serializer": "3.5.6",
