@@ -1,15 +1,6 @@
-'use strict';
-import Ember from 'ember';
+import Component from '@ember/component';
+import SmartViewMixin from 'client/mixins/smart-view-mixin';
 
-export default Ember.Component.extend({
-  actions: {
-    updateRecordPerPage() {
-      this.get('customView')
-        .save()
-        .then(() => this.sendAction('fetchRecords'));
-    },
-    fetchRecords(olderOrNewer) {
-      this.sendAction('fetchRecords', olderOrNewer);
-    }
-  }
+export default Component.extend(SmartViewMixin, {
+  classNames: ['l-gallery-view-container']
 });
