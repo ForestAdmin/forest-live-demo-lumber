@@ -50,9 +50,6 @@ export default Component.extend(SmartViewMixin, {
       cssDrawLink.href = '//cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.css';
 
       headElement.appendChild(cssDrawLink);
-
-      // NOTICE: This is really dangerous and might not work and really near version !!
-      $('#map').css('height', $('.collectionList__content').height());
     });
   },
 
@@ -66,8 +63,6 @@ export default Component.extend(SmartViewMixin, {
     }
 
     const markers = [];
-    // NOTICE: This is really dangerous and might not work and really near version !!
-    $('#map_canvas').height($('.l-content').height());
 
     this.records.forEach(function (record) {
       markers.push([
