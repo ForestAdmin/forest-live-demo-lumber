@@ -24,7 +24,7 @@
     "morgan": "~1.7.0",
     "parse-data-uri": "0.2.0",
     "pg": "~6.1.0",
-    "sequelize": "4.8.0",
+    "sequelize": "5.15.1",
     "serve-favicon": "~2.3.0",
     "stripe": "5.5.0",
     "uuid": "3.2.1",
