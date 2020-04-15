@@ -16,12 +16,25 @@ export default Component.extend(SmartViewMixin, {
   init(...args) {
     this._super(...args);
 
+    this.initConditions();
     this.loadPlugin();
   },
 
   onRecordsChange: observer('records.[]', function () {
     this.setEvent();
   }),
+
+  initConditions() {
+    if (this.filters) {
+      this.filters.forEach(condition => {
+        if (condition.operator === 'is after') {
+          this.set('conditionAfter', condition);
+        } else if (condition.operator === 'is before') {
+          this.set('conditionBefore', condition);
+        }
+      })
+    }
+  },
 
   loadPlugin() {
     scheduleOnce('afterRender', this, function () {
