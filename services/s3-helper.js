@@ -18,12 +18,10 @@ function S3Helper() {
       // Create the S3 client.
       let s3Bucket = new AWS.S3({ params: { Bucket: process.env.S3_BUCKET }});
       let parsed = parseDataUri(rawData);
-      let base64Image = rawData.replace(/^data:(image|application)\/\w+;base64,/, '');
 
       let data = {
         Key: filename,
-        Body: new Buffer(base64Image, 'base64'),
-        ContentEncoding: 'base64',
+        Body: parsed.data,
         ContentDisposition: 'inline',
         ContentType: parsed.mimeType,
         ACL: 'public-read'
