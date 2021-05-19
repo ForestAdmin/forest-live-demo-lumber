@@ -735,6 +735,58 @@
         "change": []
       }
     }, {
+      "name": "Error 400",
+      "type": "single",
+      "baseUrl": null,
+      "endpoint": "/forest/actions/error-400",
+      "httpMethod": "POST",
+      "redirect": null,
+      "download": false,
+      "fields": [],
+      "hooks": {
+        "load": false,
+        "change": []
+      }
+    }, {
+      "name": "Error 401",
+      "type": "single",
+      "baseUrl": null,
+      "endpoint": "/forest/actions/error-401",
+      "httpMethod": "POST",
+      "redirect": null,
+      "download": false,
+      "fields": [],
+      "hooks": {
+        "load": false,
+        "change": []
+      }
+    }, {
+      "name": "Error 404",
+      "type": "single",
+      "baseUrl": null,
+      "endpoint": "/forest/actions/error-404",
+      "httpMethod": "POST",
+      "redirect": null,
+      "download": false,
+      "fields": [],
+      "hooks": {
+        "load": false,
+        "change": []
+      }
+    }, {
+      "name": "Error 500",
+      "type": "single",
+      "baseUrl": null,
+      "endpoint": "/forest/actions/error-500",
+      "httpMethod": "POST",
+      "redirect": null,
+      "download": false,
+      "fields": [],
+      "hooks": {
+        "load": false,
+        "change": []
+      }
+    }, {
       "name": "Generate invoice",
       "type": "bulk",
       "baseUrl": null,
@@ -742,6 +794,71 @@
       "httpMethod": "POST",
       "redirect": null,
       "download": true,
+      "fields": [],
+      "hooks": {
+        "load": false,
+        "change": []
+      }
+    }, {
+      "name": "Return HTML",
+      "type": "single",
+      "baseUrl": null,
+      "endpoint": "/forest/actions/return-html",
+      "httpMethod": "POST",
+      "redirect": null,
+      "download": false,
+      "fields": [],
+      "hooks": {
+        "load": false,
+        "change": []
+      }
+    }, {
+      "name": "Webhook",
+      "type": "single",
+      "baseUrl": null,
+      "endpoint": "/forest/actions/webhook",
+      "httpMethod": "POST",
+      "redirect": null,
+      "download": false,
+      "fields": [],
+      "hooks": {
+        "load": false,
+        "change": []
+      }
+    }, {
+      "name": "With a specific endpoint",
+      "type": "single",
+      "baseUrl": null,
+      "endpoint": "/forest/actions/specific",
+      "httpMethod": "POST",
+      "redirect": null,
+      "download": false,
+      "fields": [],
+      "hooks": {
+        "load": false,
+        "change": []
+      }
+    }, {
+      "name": "With a working baseURL",
+      "type": "single",
+      "baseUrl": "http://localhost:3510",
+      "endpoint": "/forest/actions/with-a-working-baseurl",
+      "httpMethod": "POST",
+      "redirect": null,
+      "download": false,
+      "fields": [],
+      "hooks": {
+        "load": false,
+        "change": []
+      }
+    }, {
+      "name": "With baseURL",
+      "type": "single",
+      "baseUrl": "https://foo.bar",
+      "endpoint": "/forest/actions/with-baseurl",
+      "httpMethod": "POST",
+      "redirect": null,
+      "download": false,
       "fields": [],
       "hooks": {
         "load": false,
@@ -1518,7 +1635,7 @@
     "liana": "forest-express-sequelize",
     "liana_version": "7.7.0",
     "engine": "nodejs",
-    "engine_version": "14.16.0",
+    "engine_version": "12.13.0",
     "orm_version": "5.15.2"
   }
 }

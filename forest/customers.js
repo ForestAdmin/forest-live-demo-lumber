@@ -24,6 +24,36 @@ collection('customers', {
       description: 'Explain the reason why you want to charge manually the customer here',
       type: 'String'
     }]
+  }, {
+    name: 'Return HTML',
+    type: 'single',
+  }, {
+    name: 'Webhook',
+    type: 'single',
+  }, {
+    name: 'Error 400',
+    type: 'single',
+  }, {
+    name: 'Error 401',
+    type: 'single',
+  }, {
+    name: 'Error 404',
+    type: 'single',
+  }, {
+    name: 'Error 500',
+    type: 'single',
+  }, {
+    name: 'With baseURL',
+    type: 'single',
+    baseUrl: 'https://foo.bar'
+  }, {
+    name: 'With a working baseURL',
+    type: 'single',
+    baseUrl: `${process.env.APPLICATION_URL || `http://localhost:${process.env.APPLICATION_PORT}`}`
+  }, {
+    name: 'With a specific endpoint',
+    type: 'single',
+    endpoint: "/forest/actions/specific"
   }],
   fields: [{
     field: 'fullname',

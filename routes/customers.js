@@ -112,4 +112,49 @@ router.post('/actions/charge-credit-card', Liana.ensureAuthenticated, (req, res,
     });
 });
 
+router.post('/actions/return-html', Liana.ensureAuthenticated, (request, response, next) => {
+  response.send({
+    success: true,
+    html: 'Congrats <strong>It works</strong>'
+  })
+})
+
+router.post('/actions/webhook', Liana.ensureAuthenticated, (request, response, next) => {
+  response.send({
+    success: true,
+    webhook: {
+      url: 'https://app.forestadmin.com/forest/',
+      body: null
+    }
+  })
+})
+
+router.post('/actions/error-401', Liana.ensureAuthenticated, (request, response, next) => {
+  response.status(401).send({
+    error: 'Not authorized'
+  })
+})
+
+router.post('/actions/error-400', Liana.ensureAuthenticated, (request, response, next) => {
+  response.status(400).send({
+    error: 'Invalid request'
+  })
+})
+
+router.post('/actions/error-404', Liana.ensureAuthenticated, (request, response, next) => {
+  response.status(404).send()
+})
+
+router.post('/actions/error-500', Liana.ensureAuthenticated, (request, response, next) => {
+  response.status(500).send()
+})
+
+router.post('/actions/with-a-working-baseurl', Liana.ensureAuthenticated, (request, response, next) => {
+  response.status(200).send()
+})
+
+router.post('/actions/specific', Liana.ensureAuthenticated, (request, response, next) => {
+  response.status(200).send()
+})
+
 module.exports = router;
