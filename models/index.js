@@ -1,46 +1,37 @@
-'use strict';
-var fs = require('fs');
-var path = require('path');
-var Sequelize = require('sequelize');
+const fs = require('fs');
+const path = require('path');
+const Sequelize = require('sequelize');
 
-let databaseOptions = {
-  logging: false,
-  pool: { maxConnections: 10, minConnections: 1 },
-  dialectOptions: {}
-};
+const databasesConfiguration = require('../config/databases');
 
-if (process.env.SSL_DATABASE) {
-  databaseOptions.dialectOptions.ssl = true;
-}
+const connections = {};
+const db = {};
 
-if (process.env.ENCRYPT_DATABASE) {
-  databaseOptions.dialectOptions.encrypt = true;
-}
+databasesConfiguration.forEach((databaseInfo) => {
+  const connection = new Sequelize(databaseInfo.connection.url, databaseInfo.connection.options);
+  connections[databaseInfo.name] = connection;
 
-let sequelize = new Sequelize(process.env.DATABASE_URL, databaseOptions);
-let db = {};
+  const modelsDir = databaseInfo.modelsDir || path.join(__dirname, databaseInfo.name);
+  fs
+    .readdirSync(modelsDir)
+    .filter((file) => file.indexOf('.') !== 0 && file !== 'index.js')
+    .forEach((file) => {
+      try {
+        const model = connection.import(path.join(modelsDir, file));
+        db[model.name] = model;
+      } catch (error) {
+        console.error(`Model creation error: ${error}`);
+      }
+    });
+});
 
-fs
-  .readdirSync(__dirname)
-  .filter(function (file) {
-    return (file.indexOf('.') !== 0) && (file !== 'index.js');
-  })
-  .forEach(function (file) {
-    try {
-      var model = sequelize['import'](path.join(__dirname, file));
-      db[model.name] = model;
-    } catch (error) {
-      console.error('Model creation error: ' + error);
-    }
-  });
-
-Object.keys(db).forEach(function(modelName) {
+Object.keys(db).forEach((modelName) => {
   if ('associate' in db[modelName]) {
     db[modelName].associate(db);
   }
 });
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+db.objectMapping = Sequelize;
+db.connections = connections;
 
 module.exports = db;

@@ -1,8 +1,12 @@
-const Liana = require('forest-express-sequelize');
+const { collection } = require('forest-express-sequelize');
 const models = require('../models/');
-const _ = require('lodash');
 
-Liana.collection('customers', {
+// This file allows you to add to your Forest UI:
+// - Smart actions: https://docs.forestadmin.com/documentation/reference-guide/actions/create-and-manage-smart-actions
+// - Smart fields: https://docs.forestadmin.com/documentation/reference-guide/fields/create-and-manage-smart-fields
+// - Smart relationships: https://docs.forestadmin.com/documentation/reference-guide/relationships/create-a-smart-relationship
+// - Smart segments: https://docs.forestadmin.com/documentation/reference-guide/segments/smart-segments
+collection('customers', {
   actions: [{
     name: 'Generate invoice',
     download: true
@@ -54,9 +58,9 @@ Liana.collection('customers', {
       return models.addresses
         .findOne({ where: { customer_id: customer.id } })
         .then((address) => {
-          return address.address_line_1 + '\n' +
-            address.address_line_2 + '\n' +
-            address.address_city + address.country;
+          return address.addressLine1 + '\n' +
+            address.addressLine2 + '\n' +
+            address.addressCity + address.country;
         });
     }
   }, {

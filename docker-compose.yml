@@ -1,9 +1,21 @@
-postgres :
-  image : postgres:latest
-  container_name : forest_live_demo_lumber
-  ports :
-    - "5416:5432"
-  environment:
-    - POSTGRES_DB=forest_demo
-    - POSTGRES_USER=forest
-    - POSTGRES_PASSWORD=secret
+version: '3.4'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: live_demo_lumber
+    environment:
+      - APPLICATION_PORT=${APPLICATION_PORT}
+      - APPLICATION_URL=${APPLICATION_URL}
+      - DATABASE_URL=${DOCKER_DATABASE_URL}
+      - DATABASE_SCHEMA=${DATABASE_SCHEMA}
+      - DATABASE_SSL=${DATABASE_SSL}
+      - FOREST_AUTH_SECRET=${FOREST_AUTH_SECRET}
+      - FOREST_ENV_SECRET=${FOREST_ENV_SECRET}
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - FOREST_URL=${FOREST_URL-https://api.development.forestadmin.com}
+    ports:
+      - "${APPLICATION_PORT}:${APPLICATION_PORT}"
+    volumes:
+      - ./:/usr/src/app
