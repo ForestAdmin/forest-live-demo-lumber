@@ -1,9 +1,8 @@
-#!/usr/bin/env node
 require('dotenv').config();
-const app = require('../app');
 const debug = require('debug')('{name}:server');
 const http = require('http');
 const chalk = require('chalk');
+const app = require('./app');
 
 function normalizePort(val) {
   const port = parseInt(val, 10);

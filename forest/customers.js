@@ -1,8 +1,12 @@
-const Liana = require('forest-express-sequelize');
+const { collection } = require('forest-express-sequelize');
 const models = require('../models/');
-const _ = require('lodash');
 
-Liana.collection('customers', {
+// This file allows you to add to your Forest UI:
+// - Smart actions: https://docs.forestadmin.com/documentation/reference-guide/actions/create-and-manage-smart-actions
+// - Smart fields: https://docs.forestadmin.com/documentation/reference-guide/fields/create-and-manage-smart-fields
+// - Smart relationships: https://docs.forestadmin.com/documentation/reference-guide/relationships/create-a-smart-relationship
+// - Smart segments: https://docs.forestadmin.com/documentation/reference-guide/segments/smart-segments
+collection('customers', {
   actions: [{
     name: 'Generate invoice',
     download: true
@@ -20,6 +24,36 @@ Liana.collection('customers', {
       description: 'Explain the reason why you want to charge manually the customer here',
       type: 'String'
     }]
+  }, {
+    name: 'Return HTML',
+    type: 'single',
+  }, {
+    name: 'Webhook',
+    type: 'single',
+  }, {
+    name: 'Error 400',
+    type: 'single',
+  }, {
+    name: 'Error 401',
+    type: 'single',
+  }, {
+    name: 'Error 404',
+    type: 'single',
+  }, {
+    name: 'Error 500',
+    type: 'single',
+  }, {
+    name: 'With baseURL',
+    type: 'single',
+    baseUrl: 'https://foo.bar'
+  }, {
+    name: 'With a working baseURL',
+    type: 'single',
+    baseUrl: `${process.env.APPLICATION_URL || `http://localhost:${process.env.APPLICATION_PORT}`}`
+  }, {
+    name: 'With a specific endpoint',
+    type: 'single',
+    endpoint: "/forest/actions/specific"
   }],
   fields: [{
     field: 'fullname',
@@ -54,9 +88,9 @@ Liana.collection('customers', {
       return models.addresses
         .findOne({ where: { customer_id: customer.id } })
         .then((address) => {
-          return address.address_line_1 + '\n' +
-            address.address_line_2 + '\n' +
-            address.address_city + address.country;
+          return address.addressLine1 + '\n' +
+            address.addressLine2 + '\n' +
+            address.addressCity + address.country;
         });
     }
   }, {

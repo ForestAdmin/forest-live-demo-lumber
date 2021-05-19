@@ -1,26 +1,12 @@
-const Liana = require('forest-express-sequelize');
-const models = require('../models');
+const { collection } = require('forest-express-sequelize');
 
-Liana.collection('orders', {
-  fields: [{
-    field: 'delivery_address',
-    type: 'String',
-    reference: 'addresses.id',
-    get: function (order) {
-      return models.addresses
-        .findAll({
-          include: [{
-            model: models.customers,
-            where: { id: order.customer_id },
-            include: [{
-              model: models.orders,
-              where: { ref: order.ref }
-            }]
-          }],
-        })
-        .then((addresses) => {
-          if (addresses) { return addresses[0]; }
-        });
-    }
-  }]
+// This file allows you to add to your Forest UI:
+// - Smart actions: https://docs.forestadmin.com/documentation/reference-guide/actions/create-and-manage-smart-actions
+// - Smart fields: https://docs.forestadmin.com/documentation/reference-guide/fields/create-and-manage-smart-fields
+// - Smart relationships: https://docs.forestadmin.com/documentation/reference-guide/relationships/create-a-smart-relationship
+// - Smart segments: https://docs.forestadmin.com/documentation/reference-guide/segments/smart-segments
+collection('orders', {
+  actions: [],
+  fields: [],
+  segments: [],
 });

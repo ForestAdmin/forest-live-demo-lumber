@@ -1,88 +1,60 @@
-const P = require('bluebird');
 const express = require('express');
+const { PermissionMiddlewareCreator } = require('forest-express-sequelize');
+const { products } = require('../models');
+
 const router = express.Router();
-const Liana = require('forest-express-sequelize');
-const faker = require('faker');
-const parseDataUri = require('parse-data-uri');
-const csv = require('csv');
-const models = require('../models');
+const permissionMiddlewareCreator = new PermissionMiddlewareCreator('products');
 
-router.post('/products/actions/import-data', Liana.ensureAuthenticated,
-  (req, res) => {
-		let parsed = parseDataUri(req.body.data.attributes.values['CSV file']);
+// This file contains the logic of every route in Forest Admin for the collection products:
+// - Native routes are already generated but can be extended/overriden - Learn how to extend a route here: https://docs.forestadmin.com/documentation/v/v6/reference-guide/routes/extend-a-route
+// - Smart action routes will need to be added as you create new Smart Actions - Learn how to create a Smart Action here: https://docs.forestadmin.com/documentation/v/v6/reference-guide/actions/create-and-manage-smart-actions
 
-		csv.parse(parsed.data, { delimiter: ';' }, function (err, rows) {
-			if (err) {
-				res.status(400).send({ 
-					error: `Cannot import data: ${err.message}` });
-			} else {
-				return P
-					.each(rows, (row) => {
-						let price = 0;
-						switch (req.body.data.attributes.values['Type']) {
-							case 'phone':
-								price = faker.commerce.price(300, 1000) * 100;
-								break;
-							case 'dress':
-								price = faker.commerce.price(10, 200) * 100;
-								break;
-							case 'toy':
-								price = faker.commerce.price(5, 100) * 100;
-								break;
-						}
+// Create a Product
+router.post('/products', permissionMiddlewareCreator.create(), (request, response, next) => {
+  // Learn what this route does here: https://docs.forestadmin.com/documentation/v/v6/reference-guide/routes/default-routes#create-a-record
+  next();
+});
 
-						return models.products.create({
-							label: row[0],
-							price: price,
-							picture: row[1].replace('//i5.walmartimages.com/asr/', '//s3-eu-west-1.amazonaws.com/forestadmin-test/livedemo/')
-						});
-					})
-					.then(() => {
-						res.send({ success: 'Data successfuly imported!' });
-					});
-			}
-		});
-  });
+// Update a Product
+router.put('/products/:recordId', permissionMiddlewareCreator.update(), (request, response, next) => {
+  // Learn what this route does here: https://docs.forestadmin.com/documentation/v/v6/reference-guide/routes/default-routes#update-a-record
+  next();
+});
 
-router.get('/products/:product_id/relationships/buyers', 
-  Liana.ensureAuthenticated, (req, res, next) => {
-    let limit = parseInt(req.query.page.size) || 10;
-    let offset = (parseInt(req.query.page.number) - 1) * limit;
+// Delete a Product
+router.delete('/products/:recordId', permissionMiddlewareCreator.delete(), (request, response, next) => {
+  // Learn what this route does here: https://docs.forestadmin.com/documentation/v/v6/reference-guide/routes/default-routes#delete-a-record
+  next();
+});
 
-    let queryType = models.sequelize.QueryTypes.SELECT;
+// Get a list of Products
+router.get('/products', permissionMiddlewareCreator.list(), (request, response, next) => {
+  // Learn what this route does here: https://docs.forestadmin.com/documentation/v/v6/reference-guide/routes/default-routes#get-a-list-of-records
+  next();
+});
 
-    let countQuery = `
-      SELECT COUNT(*)
-      FROM customers
-      JOIN orders ON orders.customer_id = customers.id
-      JOIN products ON orders.product_id = products.id
-      WHERE product_id = ${req.params.product_id};
-    `;
+// Get a number of Products
+router.get('/products/count', permissionMiddlewareCreator.list(), (request, response, next) => {
+  // Learn what this route does here: https://docs.forestadmin.com/documentation/v/v6/reference-guide/routes/default-routes#get-a-number-of-records
+  next();
+});
 
-    let dataQuery = `
-      SELECT customers.*
-      FROM customers
-      JOIN orders ON orders.customer_id = customers.id
-      JOIN products ON orders.product_id = products.id
-      WHERE product_id = ${req.params.product_id}
-      LIMIT ${limit}
-      OFFSET ${offset}
-    `;
+// Get a Product
+router.get('/products/:recordId(?!count)', permissionMiddlewareCreator.details(), (request, response, next) => {
+  // Learn what this route does here: https://docs.forestadmin.com/documentation/v/v6/reference-guide/routes/default-routes#get-a-record
+  next();
+});
 
-    return P
-      .all([
-        models.sequelize.query(countQuery, { type: queryType }),
-        models.sequelize.query(dataQuery, { type: queryType })
-      ])
-      .spread((count, customers) => {
-        return new Liana.ResourceSerializer(Liana, models.customers, customers, null, {}, {
-          count: count[0].count
-        }).perform();
-      })
-      .then((products) => {
-        res.send(products);
-      })
-      .catch((err) => next(err));
-  });
+// Export a list of Products
+router.get('/products.csv', permissionMiddlewareCreator.export(), (request, response, next) => {
+  // Learn what this route does here: https://docs.forestadmin.com/documentation/v/v6/reference-guide/routes/default-routes#export-a-list-of-records
+  next();
+});
+
+// Delete a list of Products
+router.delete('/products', permissionMiddlewareCreator.delete(), (request, response, next) => {
+  // Learn what this route does here: https://docs.forestadmin.com/documentation/v/v6/reference-guide/routes/default-routes#delete-a-list-of-records
+  next();
+});
 
 module.exports = router;
