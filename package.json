@@ -19,7 +19,7 @@
     "filesize": "3.6.0",
     "forest-express-sequelize": "latest",
     "jsonapi-serializer": "3.5.6",
-    "jsonwebtoken": "8.2.0",
+    "jsonwebtoken": "9.0.0",
     "lodash": "4.17.5",
     "morgan": "~1.7.0",
     "parse-data-uri": "0.2.0",
